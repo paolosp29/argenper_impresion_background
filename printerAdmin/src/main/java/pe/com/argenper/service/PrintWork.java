@@ -7,6 +7,8 @@ import java.awt.print.PrinterException;
 import java.text.MessageFormat;
 //import java.io.IOException;
 
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.UnmodifiableSetException;
@@ -131,7 +133,7 @@ public class PrintWork extends JFrame {
 		try {
 			boolean imprimio = true;
 			//Servicio de impresion
-		    //PrintService pss = PrintServiceLookup.lookupDefaultPrintService();
+		    PrintService pss = PrintServiceLookup.lookupDefaultPrintService();
 			
 			//Atributos
 			PrintRequestAttributeSet attr_set = new HashPrintRequestAttributeSet();
@@ -177,8 +179,8 @@ public class PrintWork extends JFrame {
 
 //			attr_set.add(Sides.DUPLEX);
 			try{
-				//imprimio = editor.print(new MessageFormat(""), new MessageFormat(""), true, pss, attr_set, false);
-				imprimio = editor.print(new MessageFormat(""), new MessageFormat(""), true, null, attr_set, true);
+				imprimio = editor.print(new MessageFormat(""), new MessageFormat(""), false, pss, attr_set, true);
+				//imprimio = editor.print(new MessageFormat(""), new MessageFormat(""), true, null, attr_set, true);
 			}catch(PrinterException e){
 				this.getError().setearErr("Error imprimiendo. "+e.getMessage(), -101, "iniciarImpresion()", 0);
 			}

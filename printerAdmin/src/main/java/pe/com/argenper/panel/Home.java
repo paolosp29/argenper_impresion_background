@@ -189,7 +189,7 @@ public class Home {
 		});
 		btnLoaddocs.addMouseListener(new MouseAdapter() {
 			public void mouseUp(MouseEvent arg0) {
-				loadDocs(false);
+				loadDocs(false, false);
 			}
 		});
 		btnLoaddocs.setBounds(10, 20, 200, 26);
@@ -218,12 +218,12 @@ public class Home {
 		Button btnIniPrintW = new Button(shell, SWT.NONE);
 		btnIniPrintW.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
-				iniciarImpresion();
+				iniciarImpresion(null);
 			}
 		});
 		btnIniPrintW.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
-				iniciarImpresion();
+				iniciarImpresion(null);
 			}
 		});
 		btnIniPrintW.setBounds(337, 532, 144, 26);
@@ -331,6 +331,7 @@ public class Home {
 		btnAutoRefresh.setText("Recarga Automática");
 		
 		tareaBack(this, autoRefresh).start();
+		loadDocs(false, false);
 	}
 	private void beginTarea(){
 		tareaBack(this, true).start();
@@ -370,6 +371,7 @@ public class Home {
 		browser.setVisible(true);
 		return true;
 	}
+	
 	private boolean leerDocumentoCargado()
 	{
 		String doc = new String();
@@ -426,10 +428,10 @@ public class Home {
 		ponerMsg("Documento cargado");
 		return false;
 	}
-	private boolean iniciarImpresion()
+	private boolean iniciarImpresion(DocumentoPrint docAutoPrint)
 	{ //PabloGo, 11 de junio de 2013
 		boolean imprimio = false;
-		DocumentoPrint docImpr = this.getDocAct();
+		DocumentoPrint docImpr = (docAutoPrint==null?this.getDocAct():docAutoPrint);
 		if (docImpr == null){
 			ponerMsg("Documento de impresión no seleccionado.");
 		}else{
@@ -573,19 +575,24 @@ s																			 * de que este documento se envia */
 		
 		return true;
 	}
-	private boolean loadDocs(boolean addToThread)
+	private boolean loadDocs(boolean addToThread, boolean isFromThread)
 	{ //PabloGo, 30 de mayo de 2013
 		try {
-			if(!autoRefresh)return false;
+			if(addToThread && !autoRefresh)return false;
 			limpiarTablaDocs(tablaDocs);
 			listaDocumentos.removeAll();
 			tablaDocs.setVisible(false);
 			listaDocumentos.setVisible(false); //ocultar listado
 			listadoDoc = this.commClass.loadPrintDocs();
 			Iterator<DocumentoPrint> li = listadoDoc.listIterator();
-
+			boolean docAutoImpresoEjec=false;
 			while (li.hasNext()){ //recorre todos los documentos cargados de "listadoDoc" el cual contiene objetos tipo "DocumentoPrint"
 				DocumentoPrint dp = li.next();
+				//si se invoco desde el hilo automatico y no esta impreso
+				if(isFromThread && !dp.getDocImpreso() && !docAutoImpresoEjec){
+					iniciarImpresion(dp);
+					docAutoImpresoEjec=true;
+				}
 				listaDocumentos.add(dp.getIdDoc() + " - "+ dp.getRemitente()); //agrega al combo el texto del documento actual
 				agregarRegistroATabla(tablaDocs, dp);
 			}
@@ -660,7 +667,7 @@ s																			 * de que este documento se envia */
 		        	public void run() {
 		        		if(miHome.autoRefresh)
 		        		miHome.ponerMsg("Carga automática de documentos en curso");
-		        		miHome.loadDocs(true);
+		        		miHome.loadDocs(true, true);
 		        		//laLabel.setText("done");
 		          }
 		        });
@@ -759,7 +766,7 @@ s																			 * de que este documento se envia */
 		    tc2.setWidth(100);
 		    tc3.setWidth(120);
 		    tc4.setWidth(200);
-		    tc5.setWidth(20);
+		    tc5.setWidth(80);
 		    t.setHeaderVisible(true);
 	    	return true;
 		}catch(Exception e){

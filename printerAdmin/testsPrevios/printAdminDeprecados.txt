@@ -1,0 +1,153 @@
+
+/*	private boolean ponerMsg(String t)
+{
+	mensajeTxt.setText(t);
+	return true;
+}
+
+	import java.awt.Point;
+	import java.awt.Rectangle;
+	import java.io.ByteArrayInputStream;
+	import org.eclipse.swt.widgets.ToolItem;
+	import org.eclipse.swt.printing.Printer;
+	import org.eclipse.swt.graphics.GC;
+	import org.eclipse.swt.printing.PrintDialog;
+	import org.eclipse.swt.events.DisposeListener;
+	import org.eclipse.swt.events.DisposeEvent;
+	import org.eclipse.swt.widgets.Combo;
+	
+	private Combo cmbListaImp;
+	
+	private boolean limpiarListadoImps()
+	{ //PabloGo, 11 de junio de 2013, inicializar las impresoras
+		this.listaImpresoras = null;
+		return true;
+	}
+	
+	private void imprimirDoc() 
+	{  //(DEPRECADO) PabloGo, 9 de julio de 2013, ya no se usará dado que no se imprimé vía browser.
+	//PabloGo, 11 de junio de 2013
+	
+	try {
+
+		int idDrvImp = 0;
+		idDrvImp = cmbListaImp.getSelectionIndex();
+		if (idDrvImp == -1){
+			ponerMsg("Debe seleccionar la impresora");
+		}else{
+		//	PrintDialog printDialog = new PrintDialog(shell, SWT.NONE);
+		//	PrinterData printerData = printDialog.open(); 
+			
+			PrinterData printerData = new PrinterData();
+			ArrayList<PrinterData> pd = this.getListadoImpresoras(); 
+
+			printerData= pd.get(idDrvImp);
+
+			if (printerData == null){
+				//no se configuró la impresión
+			}else{
+				Printer printer = null;
+				try {
+					printer = new Printer(printerData);
+
+					printer.startJob("Constancia de giro");    
+					printer.startPage();
+
+			        org.eclipse.swt.graphics.Rectangle trim = printer.computeTrim(0, 0, 0, 0);
+			        org.eclipse.swt.graphics.Point dpi = printer.getDPI();
+			        int leftMargin = dpi.x + trim.x;
+			        int topMargin = dpi.y / 2 + trim.y;
+				}catch(Exception pe){
+					//error de la impresora?
+					System.out.print(pe.getMessage());
+				}
+				GC gc = new GC(printer);
+				browser.print(gc);
+				gc.dispose();
+				printer.endJob();
+				printer.dispose();
+			}
+		}
+	}catch(Exception e){
+		System.out.print(e.getMessage());
+	}
+}*/
+
+/*	private boolean agregarImpresora(PrinterData pd)
+	{ //PabloGo, 11 de junio de 2013, agregar impresora
+		this.listaImpresoras.ad
+		return true;
+	}*/
+
+/*
+	private boolean obtenerImpresoras()
+	{	// PabloGo, 11 de junio de 2013
+	 	obtiene el listado de las impresoras configuradas en el sistema 
+		try {
+			if (limpiarListadoImps()){
+				int i=0;
+				ArrayList<PrinterData> listP = new ArrayList<PrinterData>();
+				PrinterData[] imps = null;
+				imps = Printer.getPrinterList();
+				
+				if (imps.length >0){
+					for (i=0;i<imps.length;i++){
+						//imps[i];
+						listP.add(imps[i]);		
+				//		agregarImpresora(imps[i]);
+						cmbListaImp.add(imps[i].name);
+					}
+				}
+
+				this.setListadoImpresoras(listP);
+			}
+		}catch(Exception e){
+			System.out.print(e.getMessage());
+			return false;
+		}
+		return true;
+	}
+	
+/* Proveniente desde "createContents" 
+ * PabloGo, 12 de julio de 2013 
+ * De aca para abajo todo lo que ya no se usará 
+ * dado que no se puede imprimir con SWT	*/		
+
+		/* DobleClick, PabloGo, 10 de julio de 2013
+		 * Se cambia por la presión del "Enter" */
+		
+		/* listaDocumentos.addMouseListener(new MouseAdapter() {
+			public void mouseDoubleClick(MouseEvent arg0) {
+				seleccionarItem(arg0);
+			}
+		});*/
+		
+		
+		// Combo de impresoras		
+/*		cmbListaImp = new Combo(shell, SWT.NONE);
+		cmbListaImp.addMouseListener(new MouseAdapter() {
+			public void mouseUp(MouseEvent e) {
+				//elegir impresora.
+			}
+		});
+		cmbListaImp.setBounds(216, 9, 187, 27);
+		cmbListaImp.setVisible(false);
+
+		// (DEPRECADO) Botón que hace la impresión vía browser del documento		
+				Button btnImprimirDocumento = new Button(shell, SWT.NONE);
+				btnImprimirDocumento.addMouseListener(new MouseAdapter() {
+					public void mouseDown(MouseEvent arg0) {
+						imprimirDoc();
+					}
+				});
+				
+				btnImprimirDocumento.setBounds(10, 376, 137, 26);
+				btnImprimirDocumento.setText("Imprimir documento");
+				btnImprimirDocumento.setVisible(false);//PabloGo, 8 de julio de 2013 (lo escondo)
+		// (FIN DEPRECADO)
+		
+		//cargar las impresoras
+		obtenerImpresoras();
+	
+	
+*/

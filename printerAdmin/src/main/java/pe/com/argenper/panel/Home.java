@@ -94,7 +94,8 @@ public class Home {
 		return this.ultIdDoc;
 	}
 	//PabloGo, 10 de julio de 2013, el documento actual seleccionado para imprimir
-	private DocumentoPrint docAct; 
+	private DocumentoPrint docAct;
+	private String strUrl; 
 	public void setDocAct(DocumentoPrint da){
 		this.docAct = da;
 	}
@@ -218,12 +219,20 @@ public class Home {
 		Button btnIniPrintW = new Button(shell, SWT.NONE);
 		btnIniPrintW.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
-				iniciarImpresion(null);
+				try {
+					iniciarImpresion(null);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnIniPrintW.addMouseListener(new MouseAdapter() {
 			public void mouseDown(MouseEvent e) {
-				iniciarImpresion(null);
+				try {
+					iniciarImpresion(null);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnIniPrintW.setBounds(337, 532, 144, 26);
@@ -339,7 +348,7 @@ public class Home {
 	private void finishTarea(){
 		tareaBack(this, false).interrupt();
 	}
-	private boolean loadDocFromServer(int indice)
+	private boolean loadDocFromServer(int indice, boolean autoPrint)
 	{	//	private boolean loadDocFromServer(List l) 
 		//Seleccionar en base al indice del listado el documento a imprimir 
 //		DocumentoPrint docP = listadoDoc.get(l.getSelectionIndex());
@@ -364,11 +373,18 @@ public class Home {
 		urlVars = urlVars + "&Imp_idImpre="+docP.getIdImpresion();
 		
 		urlDoc = urlDoc + urlVars;
-		
+		strUrl="";
 		browser.setUrl(urlDoc);
-		this.setDocAct(docP);
-		this.setUltIdDoc(indice);
-		browser.setVisible(true);
+		System.out.println("browser: "+browser.getVisible());
+		if(!autoPrint){
+			this.setDocAct(docP);
+			this.setUltIdDoc(indice);
+			browser.setVisible(true);
+		}else{
+			strUrl=urlDoc;
+		}
+		System.out.println("browser: "+browser.getUrl());
+		System.out.println("browser: "+browser.getText());
 		return true;
 	}
 	
@@ -428,10 +444,19 @@ public class Home {
 		ponerMsg("Documento cargado");
 		return false;
 	}
-	private boolean iniciarImpresion(DocumentoPrint docAutoPrint)
+	private boolean iniciarImpresion(DocumentoPrint docAutoPrint) throws IOException
 	{ //PabloGo, 11 de junio de 2013
 		boolean imprimio = false;
-		DocumentoPrint docImpr = (docAutoPrint==null?this.getDocAct():docAutoPrint);
+		DocumentoPrint docImpr=null;
+		String strHtml=null;
+		if(docAutoPrint==null){
+			docImpr = this.getDocAct();
+			strHtml=browser.getText();
+		}else{
+			docImpr = docAutoPrint;
+			strHtml=MyUtils.getHtmlFromUrl(strUrl);
+		}
+		strUrl="";
 		if (docImpr == null){
 			ponerMsg("Documento de impresión no seleccionado.");
 		}else{
@@ -439,7 +464,7 @@ public class Home {
 			if (docImpr.getConfDoc().getFiscal()>0){	//Es fiscal
 				pw = new PrintWorkFiscal(docImpr.getConfDoc().getComandoEjec());
 			}else{ //documento normal de impresion
-				pw = new PrintWork(browser.getText());
+				pw = new PrintWork(strHtml);
 				pw.setConfDoc(docImpr.getConfDoc());
 			}
 			
@@ -586,15 +611,20 @@ s																			 * de que este documento se envia */
 			listadoDoc = this.commClass.loadPrintDocs();
 			Iterator<DocumentoPrint> li = listadoDoc.listIterator();
 			boolean docAutoImpresoEjec=false;
+			int ind=0;
 			while (li.hasNext()){ //recorre todos los documentos cargados de "listadoDoc" el cual contiene objetos tipo "DocumentoPrint"
 				DocumentoPrint dp = li.next();
 				//si se invoco desde el hilo automatico y no esta impreso
 				if(isFromThread && !dp.getDocImpreso() && !docAutoImpresoEjec){
+					loadDocFromServer(ind, true);
+					//System.out.println("browser2: "+browser.getUrl());
+					//System.out.println("browser2: "+browser.getText());
 					iniciarImpresion(dp);
 					docAutoImpresoEjec=true;
 				}
 				listaDocumentos.add(dp.getIdDoc() + " - "+ dp.getRemitente()); //agrega al combo el texto del documento actual
 				agregarRegistroATabla(tablaDocs, dp);
+				ind++;
 			}
 			tablaDocs.setVisible(true);
 			listaDocumentos.setVisible(true); //mostrar listado
@@ -689,7 +719,7 @@ s																			 * de que este documento se envia */
 			indice = t.getSelectionIndex();
 		}		
 		
-		return loadDocFromServer(indice);
+		return loadDocFromServer(indice, false);
 	}
 	private boolean seleccionarItem(KeyEvent kp)
 	{ //PabloGo, 3 de junio de 2013, para cargar el documento en particular
@@ -715,7 +745,7 @@ s																			 * de que este documento se envia */
 				Table t = (Table) kp.getSource();
 				indice = t.getSelectionIndex();
 			}
-			return loadDocFromServer(indice);
+			return loadDocFromServer(indice, false);
 		}
 		return true;
 	}

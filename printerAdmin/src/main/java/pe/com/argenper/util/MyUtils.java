@@ -2,6 +2,8 @@ package pe.com.argenper.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 public class MyUtils {
@@ -38,5 +40,16 @@ public class MyUtils {
 			return null;
 		}
 		return property;
+	}
+	
+	public static String getHtmlFromUrl(String strUrl) throws IOException{
+		URL url = new URL(strUrl);
+		InputStream is = url.openStream();
+		int ptr = 0;
+		StringBuffer buffer = new StringBuffer();
+		while ((ptr = is.read()) != -1) {
+		    buffer.append((char)ptr);
+		}
+		return buffer.toString();
 	}
 }

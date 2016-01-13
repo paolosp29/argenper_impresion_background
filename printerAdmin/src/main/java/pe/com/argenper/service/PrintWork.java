@@ -108,7 +108,7 @@ public class PrintWork extends JFrame {
 			editor.setMargin(m);
 			editor.setContentType("text/html");
 			editor.setText(htmlDoc);
-			//System.out.println("editor1: "+editor.getText());
+			System.out.println("editor1: "+editor.getText());
 			editor.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.BLACK));
 			box.add(editor);        
 			//System.out.println("editor2: "+editor.getText());
@@ -123,7 +123,7 @@ public class PrintWork extends JFrame {
 			return true;
 		}catch(Exception e){
 			//Se fue por excepcion
-			this.getError().setearErr("Error de iniciando trabajo de impresion. "+e.getMessage(), -100, "iniciar()", 0);
+			this.getError().setearErr("Error de iniciando trabajo de impresi髇. "+e.getMessage(), -100, "iniciar()", 0);
 			return false;
 		}
 	}
@@ -146,7 +146,7 @@ public class PrintWork extends JFrame {
 			}else if (this.getConfDoc().getTipoHoja().equalsIgnoreCase("EJEC")){
 				attr_set.add(MediaSizeName.EXECUTIVE);
 			}else{
-				//Tama駉 personalizado 
+				//Tama锟給 personalizado 
 				float x;
 				float y;
 				String xy = new String(this.getConfDoc().getTipoHoja());
@@ -190,16 +190,16 @@ public class PrintWork extends JFrame {
 			}
 			return true;
 		}catch(UnmodifiableSetException e){
-			this.getError().setearErr("Error iniciando impresi贸n. "+e.getMessage(), -100, "iniciarImpresion()", 0);
+			this.getError().setearErr("Error iniciando impresi髇. "+e.getMessage(), -100, "iniciarImpresion()", 0);
 			return false;
 		}catch(ClassCastException e){
-			this.getError().setearErr("Error iniciando impresi贸n. "+e.getMessage(), -100, "iniciarImpresion()", 0);
+			this.getError().setearErr("Error iniciando impresi髇. "+e.getMessage(), -100, "iniciarImpresion()", 0);
 			return false;
 		}catch(NullPointerException e){
-			this.getError().setearErr("Error iniciando impresi贸n. "+e.getMessage(), -100, "iniciarImpresion()", 0);
+			this.getError().setearErr("Error iniciando impresi髇. "+e.getMessage(), -100, "iniciarImpresion()", 0);
 			return false;
 		}catch(Exception e){
-			this.getError().setearErr("Error iniciando impresi贸n. "+e.getMessage(), -100, "iniciarImpresion()", 0);
+			this.getError().setearErr("Error iniciando impresi髇. "+e.getMessage(), -100, "iniciarImpresion()", 0);
 			return false;
 		}
 	}

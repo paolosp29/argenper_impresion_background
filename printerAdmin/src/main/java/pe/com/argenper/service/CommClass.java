@@ -300,9 +300,14 @@ public class CommClass {
 										if (confDoc == null){	//No se pudo cargar la configuracion del documento
 											confDoc = new ConfigDocPrint(); //Generar obj. con conf. por defecto.
 										}
+										//serie y nro(fragmento)										
+										if (confDoc.getFiscal()>0){//es fiscal
+											String serieFiscal=docP.getSeriaNro().substring(0,3), command=confDoc.getComandoEjec();
+											confDoc.setComandoEjec(command+ " "+ serieFiscal);
+										}
+										
 										docP.setConfDoc(confDoc);
-
-									}									
+									}				
 									
 //									System.out.print(" - "+opAct.item(0).getChildNodes().item(0).getNodeValue().toString());								
 //									System.out.print(nodo.getNodeValue()+" - "+nodo.getNodeName()+"\r\n");

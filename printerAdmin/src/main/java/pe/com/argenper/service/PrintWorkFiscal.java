@@ -114,6 +114,7 @@ public class PrintWorkFiscal extends PrintWork {
 
 			return imprimio;
 		}catch(Exception e){
+			e.printStackTrace();
 			this.getError().setearErr("Error iniciando impresión. "+e.getMessage(), -100, "iniciarImpresion()", 0);
 			return false;
 		}
